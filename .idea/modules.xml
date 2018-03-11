@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/UTPNLP/UTPNLP.iml" filepath="$PROJECT_DIR$/UTPNLP/UTPNLP.iml" />
+      <module fileurl="file://$PROJECT_DIR$/UTPSpider/UTPSpider.iml" filepath="$PROJECT_DIR$/UTPSpider/UTPSpider.iml" />
+      <module fileurl="file://$PROJECT_DIR$/UTPWeb/UTPWeb.iml" filepath="$PROJECT_DIR$/UTPWeb/UTPWeb.iml" />
+    </modules>
+  </component>
+</project>
