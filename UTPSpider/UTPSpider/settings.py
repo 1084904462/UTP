@@ -18,13 +18,25 @@ DOWNLOAD_DELAY = 0.5
 # Obey robots.txt rules
 ROBOTSTXT_OBEY = False
 
-
+SPLASH_URL = 'http://127.0.0.1:8050'
 SCHEDULER = "scrapy_redis.scheduler.Scheduler"
 DUPEFILTER_CLASS = "scrapy_redis.dupefilter.RFPDupeFilter"
-ITEM_PIPELINES = {
-    'UTPSpider.pipelines.JsonPipeline':200,
-    'scrapy_redis.pipelines.RedisPipeline': 300
-}
+# DUPEFILTER_CLASS = "ScrapyRedisTest.dupefilter.MyRFPDupeFilter"
+# ITEM_PIPELINES = {
+#     'UTPSpider.pipelines.JsonPipeline':200,
+#     'scrapy_redis.pipelines.RedisPipeline': 300
+# }
+# DOWNLOADER_MIDDLEWARES = {
+#     'scrapy_splash.SplashCookiesMiddleware': 723,
+#     'scrapy_splash.SplashMiddleware': 725,
+#     'scrapy.downloadermiddlewares.httpcompression.HttpCompressionMiddleware': 810,
+# }
+# SPIDER_MIDDLEWARES = {
+#     'scrapy_splash.SplashDeduplicateArgsMiddleware': 100,
+# }
+# # DUPEFILTER_CLASS = 'scrapy_splash.SplashAwareDupeFilter'
+# HTTPCACHE_STORAGE = 'scrapy_splash.SplashAwareFSCacheStorage'
+
 # Configure maximum concurrent requests performed by Scrapy (default: 16)
 #CONCURRENT_REQUESTS = 32
 

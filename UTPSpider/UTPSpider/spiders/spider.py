@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 
 import scrapy
+import json
+import re
 from scrapy.http import Request
 from urllib import parse
 from newspaper import Article
@@ -10,22 +12,45 @@ import redis    # 导入redis模块，通过python操作redis 也可以直接在
 
 class UTPSpider(RedisSpider):
     name = "UTPSpider"
-    allowed_domains = ["ccgp-jiangsu.gov.cn"]
+    # allowed_domains = ["ccgp-jiangsu.gov.cn"]
     redis_key = 'UTPSpider:start_urls'
 
-    def start_requests(self):
-        pool = redis.ConnectionPool(host='localhost', port=6379, decode_responses=True)   # host是redis主机，需要redis服务端和客户端都起着 redis默认端口是6379
-        r = redis.Redis(connection_pool=pool)
-        url = "http://www.ccgp-jiangsu.gov.cn/cgxx/cjgg/index.html"
-        r.lpush("UTPSpider:start_urls", url)
-        yield Request(url=url, callback=self.parse)
+    global splashurl
+    splashurl = "http://localhost:8050/render.html"
 
-        #['http://www.ccgp-jiangsu.gov.cn/cgxx/cjgg/index_'+ str(i) +'.html' for i in range(1,100)]
+    # def start_requests(self):
+    #     pool = redis.ConnectionPool(host='localhost', port=6379, decode_responses=True)   # host是redis主机，需要redis服务端和客户端都起着 redis默认端口是6379
+    #     r = redis.Redis(connection_pool=pool)
+    #     url = "http://www.ccgp-jiangsu.gov.cn/cgxx/cjgg/index.html"
+    #     r.lpush("UTPSpider:start_urls", url)
+    #     # yield Request(url=url, callback=self.parse)
+    #     yield self.make_requests_from_url(url)
+
+
+    # splash 服务器地址
+    #此处是重父类方法，并使把url传给splash解析
+    def make_requests_from_url(self, url):
+        global splashurl
+        url = splashurl + "?url=" + url
+        body = json.dumps({"url": url, "wait": 5, 'images': 0, 'allowed_content_types': 'text/html; charset=utf-8'})
+        headers = {'Content-Type': 'application/json'}
+        return Request(url, body=body, headers=headers, dont_filter=True)
+
 
     def parse(self, response):
-        post_urls = response.css("#newsList ul li a::attr(href)").extract()
-        for post_url in post_urls:
-            yield Request(url=parse.urljoin(response.url, post_url), callback=self.parse_detail)
+        # post_urls = response.css("#newsList ul li a::attr(href)").extract()
+        # for post_url in post_urls:
+        #     yield Request(url=parse.urljoin(response.url, post_url), callback=self.parse_detail)
+
+        real_url = re.match("(.*)url=(.*)", response.url).group(2)
+        print(real_url)
+        page_content = response.body
+
+        re_patrn = '<a[^>]+?href=["\']?([^"\']+)["\']?[^>]*>([^<]+)</a>'
+        a_list = re.findall(re_patrn, str(page_content))
+        for a in a_list:
+            print(parse.urljoin(real_url, a[0]))
+
 
     def parse_detail(self, response):
         item = ContentItem()
