@@ -6,7 +6,7 @@ import db_pool
 mysql_host = 'localhost'
 mysql_port = 3306
 mysql_user = 'root'
-mysql_password = 'root'
+mysql_password = '123456'
 mysql_db = 'utp'
 mysql_charset = 'utf8'
 

@@ -5,7 +5,6 @@ BOT_NAME = 'UTPSpider'
 SPIDER_MODULES = ['UTPSpider.spiders']
 NEWSPIDER_MODULE = 'UTPSpider.spiders'
 
-ITEM_PIPELINES = {'UTPSpider.pipelines.JsonPipeline': 100}
 
 # 禁止cookies,防止被ban
 COOKIES_ENABLED = False
@@ -17,8 +16,15 @@ DOWNLOAD_DELAY = 0.5
 #USER_AGENT = 'UTPSpider (+http://www.yourdomain.com)'
 
 # Obey robots.txt rules
-ROBOTSTXT_OBEY = True
+ROBOTSTXT_OBEY = False
 
+
+SCHEDULER = "scrapy_redis.scheduler.Scheduler"
+DUPEFILTER_CLASS = "scrapy_redis.dupefilter.RFPDupeFilter"
+ITEM_PIPELINES = {
+    'UTPSpider.pipelines.JsonPipeline':200,
+    'scrapy_redis.pipelines.RedisPipeline': 300
+}
 # Configure maximum concurrent requests performed by Scrapy (default: 16)
 #CONCURRENT_REQUESTS = 32
 
