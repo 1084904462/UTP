@@ -5,22 +5,22 @@ from scrapy.http import Request
 from urllib import parse
 from newspaper import Article
 from UTPSpider.items import ContentItem
+from scrapy_redis.spiders import RedisSpider
+import redis    # 导入redis模块，通过python操作redis 也可以直接在redis主机的服务端操作缓存数据库
 
-
-class UTPSpider(scrapy.Spider):
+class UTPSpider(RedisSpider):
     name = "UTPSpider"
     allowed_domains = ["ccgp-jiangsu.gov.cn"]
+    redis_key = 'UTPSpider:start_urls'
 
     def start_requests(self):
-        urls = [
-            'http://www.ccgp-jiangsu.gov.cn/cgxx/cjgg/index_99.html',
-        ]
-        i = 1
-        while i < 1:
-            urls.append('http://www.ccgp-jiangsu.gov.cn/cgxx/cjgg/index_' + str(i) + '.html')
-            i += 1
-        for url in urls:
-            yield Request(url=url, callback=self.parse)
+        pool = redis.ConnectionPool(host='localhost', port=6379, decode_responses=True)   # host是redis主机，需要redis服务端和客户端都起着 redis默认端口是6379
+        r = redis.Redis(connection_pool=pool)
+        url = "http://www.ccgp-jiangsu.gov.cn/cgxx/cjgg/index.html"
+        r.lpush("UTPSpider:start_urls", url)
+        yield Request(url=url, callback=self.parse)
+
+        #['http://www.ccgp-jiangsu.gov.cn/cgxx/cjgg/index_'+ str(i) +'.html' for i in range(1,100)]
 
     def parse(self, response):
         post_urls = response.css("#newsList ul li a::attr(href)").extract()

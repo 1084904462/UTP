@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <title>内容页</title>
+    <link rel="stylesheet" th:href="@{css/bootstrap.min.css}"/>
+    <link rel="stylesheet" th:href="@{css/font-awesome.min.css}"/>
+    <script th:src="@{js/bootstrap.min.js}"></script>
+    <script th:src="@{js/jquery-3.2.1.min.js}"></script>
+</head>
+<body>
+<div class="panel panel-default">
+    <div class="panel-heading">非结构化文本处理</div>
+    <table class="table" th:each="docBean:${docBeanList}">
+        <thead>
+        <tr>
+            <th style="width: 15%">数据项</th>
+            <th style="width: 85%">数据内容</th>
+        </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>标题</td>
+                <td th:text="${docBean.title}"></td>
+            </tr>
+            <tr th:each="contentBean:${docBean.contentBeanList}">
+                <td th:text="${contentBean.keyword}"></td>
+                <td th:text="${contentBean.content}"></td>
+            </tr>
+            <tr>
+                <td>详情链接</td>
+                <td>
+                    <a th:href="${docBean.link}" th:text="${docBean.link}" target="_blank"></a>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+</body>
+</html>
