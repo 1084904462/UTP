@@ -1,19 +1,22 @@
 # -*- coding: utf-8 -*-
 
 import scrapy
-import json
-import re
 from scrapy.http import Request
-from urllib import parse
-from newspaper import Article
 from UTPSpider.items import ContentItem
 from scrapy_redis.spiders import RedisSpider
+import json
+import re
+# from fake_useragent import UserAgent
+from urllib import parse
+from newspaper import Article
+
 import redis    # 导入redis模块，通过python操作redis 也可以直接在redis主机的服务端操作缓存数据库
 
 class UTPSpider(RedisSpider):
     name = "UTPSpider"
     # allowed_domains = ["ccgp-jiangsu.gov.cn"]
     redis_key = 'UTPSpider:start_urls'
+    # ua = UserAgent()
 
     global splashurl
     splashurl = "http://localhost:8050/render.html"
