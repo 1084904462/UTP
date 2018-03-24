@@ -23,7 +23,7 @@ REDIS_HOST = 'localhost'
 REDIS_PORT = 6379
 
 SCHEDULER = "scrapy_redis.scheduler.Scheduler"
-DUPEFILTER_CLASS = "UTPSpider.dupefilter.MyRFPDupeFilter"
+DUPEFILTER_CLASS = "UTPSpider.dupefilter.UTPSpiderRFPDupeFilter"
 ITEM_PIPELINES = {
     'UTPSpider.pipelines.JsonPipeline': 200,
     'scrapy_redis.pipelines.RedisPipeline': 300
@@ -39,7 +39,7 @@ DOWNLOADER_MIDDLEWARES = {
 SPIDER_MIDDLEWARES = {
     'scrapy_splash.SplashDeduplicateArgsMiddleware': 100,
     'scrapy.contrib.spidermiddleware.offsite.OffsiteMiddleware': None,
-    'UTPSpider.middlewares.AutoChangeAllowedDomainsMiddleware': 500
+    'UTPSpider.middlewares.DynamicChangeAllowedDomainsMiddleware': 500
 }
 HTTPCACHE_STORAGE = 'scrapy_splash.SplashAwareFSCacheStorage'
 RANDOM_UA_TYPE = "random"

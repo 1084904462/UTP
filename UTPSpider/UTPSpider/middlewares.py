@@ -62,7 +62,6 @@ class UtpspiderSpiderMiddleware(object):
     def spider_opened(self, spider):
         spider.logger.info('Spider opened: %s' % spider.name)
 
-
 class UtpspiderDownloaderMiddleware(object):
     # Not all methods need to be defined. If a method is not defined,
     # scrapy acts as if the downloader middleware does not modify the
@@ -128,7 +127,7 @@ class RandomUserAgentMiddleware(object):
 
         request.headers.setdefault('User-Agent', get_ua_type())
 
-class AutoChangeAllowedDomainsMiddleware(OffsiteMiddleware):
+class DynamicChangeAllowedDomainsMiddleware(OffsiteMiddleware):
     def process_spider_output(self, response, result, spider):
         # 每次都根据allowed_domains生成新的regex
         self.host_regex = self.get_host_regex(spider)
