@@ -38,6 +38,8 @@ DOWNLOADER_MIDDLEWARES = {
 }
 SPIDER_MIDDLEWARES = {
     'scrapy_splash.SplashDeduplicateArgsMiddleware': 100,
+    'scrapy.contrib.spidermiddleware.offsite.OffsiteMiddleware': None,
+    'UTPSpider.middlewares.AutoChangeAllowedDomainsMiddleware': 500
 }
 HTTPCACHE_STORAGE = 'scrapy_splash.SplashAwareFSCacheStorage'
 RANDOM_UA_TYPE = "random"
@@ -60,10 +62,11 @@ RANDOM_UA_TYPE = "random"
 #TELNETCONSOLE_ENABLED = False
 
 # Override the default request headers:
-#DEFAULT_REQUEST_HEADERS = {
-#   'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
-#   'Accept-Language': 'en',
-#}
+# 默认请求头
+DEFAULT_REQUEST_HEADERS = {
+    'Accept': 'text/html, application/xhtml+xml, application/xml',
+    'Accept-Language': 'zh-CN,zh;q=0.8'
+}
 
 # Enable or disable spider middlewares
 # See https://doc.scrapy.org/en/latest/topics/spider-middleware.html

@@ -5,9 +5,15 @@
 # See documentation in:
 # https://doc.scrapy.org/en/latest/topics/spider-middleware.html
 
+import logging
+
 from scrapy import signals
+from scrapy.spidermiddlewares.offsite import OffsiteMiddleware
+from scrapy.http import Request
+from scrapy.utils.httpobj import urlparse_cached
 from fake_useragent import UserAgent
 
+logger = logging.getLogger(__name__)
 
 class UtpspiderSpiderMiddleware(object):
     # Not all methods need to be defined. If a method is not defined,
@@ -103,7 +109,6 @@ class UtpspiderDownloaderMiddleware(object):
     def spider_opened(self, spider):
         spider.logger.info('Spider opened: %s' % spider.name)
 
-
 class RandomUserAgentMiddleware(object):
     # 随机更换User-Agent
 
@@ -122,3 +127,22 @@ class RandomUserAgentMiddleware(object):
             return getattr(self.ua, self.ua_type)
 
         request.headers.setdefault('User-Agent', get_ua_type())
+
+class AutoChangeAllowedDomainsMiddleware(OffsiteMiddleware):
+    def process_spider_output(self, response, result, spider):
+        # 每次都根据allowed_domains生成新的regex
+        self.host_regex = self.get_host_regex(spider)
+        for x in result:
+            if isinstance(x, Request):
+                if x.dont_filter or self.should_follow(x, spider):
+                    yield x
+                else:
+                    domain = urlparse_cached(x).hostname
+                    if domain and domain not in self.domains_seen:
+                        self.domains_seen.add(domain)
+                        logger.debug("Filtered offsite request to %(domain)r: %(request)s",
+                                     {'domain': domain, 'request': x}, extra={'spider': spider})
+                        self.stats.inc_value('offsite/domains', spider=spider)
+                    self.stats.inc_value('offsite/filtered', spider=spider)
+            else:
+                yield x
