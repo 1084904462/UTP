@@ -118,7 +118,6 @@ class RandomUserAgentMiddleware(object):
         return cls(crawler)
 
     def process_request(self, request, spider):
-
         def get_ua_type():
             return getattr(self.ua, self.ua_type)
 

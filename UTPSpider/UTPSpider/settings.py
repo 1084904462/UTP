@@ -10,7 +10,7 @@ NEWSPIDER_MODULE = 'UTPSpider.spiders'
 COOKIES_ENABLED = False
 COOKIES_ENABLES = False
 
-DOWNLOAD_DELAY = 0.5
+DOWNLOAD_DELAY = 3.0
 
 # Crawl responsibly by identifying yourself (and your website) on the user-agent
 #USER_AGENT = 'UTPSpider (+http://www.yourdomain.com)'
@@ -19,23 +19,28 @@ DOWNLOAD_DELAY = 0.5
 ROBOTSTXT_OBEY = False
 
 SPLASH_URL = 'http://127.0.0.1:8050'
+REDIS_HOST = 'localhost'
+REDIS_PORT = 6379
+
 SCHEDULER = "scrapy_redis.scheduler.Scheduler"
-DUPEFILTER_CLASS = "scrapy_redis.dupefilter.RFPDupeFilter"
-# DUPEFILTER_CLASS = "ScrapyRedisTest.dupefilter.MyRFPDupeFilter"
-# ITEM_PIPELINES = {
-#     'UTPSpider.pipelines.JsonPipeline':200,
-#     'scrapy_redis.pipelines.RedisPipeline': 300
-# }
-# DOWNLOADER_MIDDLEWARES = {
-#     'scrapy_splash.SplashCookiesMiddleware': 723,
-#     'scrapy_splash.SplashMiddleware': 725,
-#     'scrapy.downloadermiddlewares.httpcompression.HttpCompressionMiddleware': 810,
-# }
-# SPIDER_MIDDLEWARES = {
-#     'scrapy_splash.SplashDeduplicateArgsMiddleware': 100,
-# }
-# # DUPEFILTER_CLASS = 'scrapy_splash.SplashAwareDupeFilter'
-# HTTPCACHE_STORAGE = 'scrapy_splash.SplashAwareFSCacheStorage'
+DUPEFILTER_CLASS = "UTPSpider.dupefilter.MyRFPDupeFilter"
+ITEM_PIPELINES = {
+    'UTPSpider.pipelines.JsonPipeline': 200,
+    'scrapy_redis.pipelines.RedisPipeline': 300
+}
+REDIS_START_URLS_AS_SET = True
+DOWNLOADER_MIDDLEWARES = {
+    'UTPSpider.middlewares.RandomUserAgentMiddleware': 543,
+    'scrapy.downloadermiddlewares.useragent.UserAgentMiddleware': None,
+    'scrapy_splash.SplashCookiesMiddleware': 725,
+    'scrapy_splash.SplashMiddleware': 730,
+    'scrapy.downloadermiddlewares.httpcompression.HttpCompressionMiddleware': 810,
+}
+SPIDER_MIDDLEWARES = {
+    'scrapy_splash.SplashDeduplicateArgsMiddleware': 100,
+}
+HTTPCACHE_STORAGE = 'scrapy_splash.SplashAwareFSCacheStorage'
+RANDOM_UA_TYPE = "random"
 
 # Configure maximum concurrent requests performed by Scrapy (default: 16)
 #CONCURRENT_REQUESTS = 32
@@ -68,13 +73,9 @@ DUPEFILTER_CLASS = "scrapy_redis.dupefilter.RFPDupeFilter"
 
 # Enable or disable downloader middlewares
 # See https://doc.scrapy.org/en/latest/topics/downloader-middleware.html
-DOWNLOADER_MIDDLEWARES = {
-    'UTPSpider.middlewares.RandomUserAgentMiddleware': 543,
-    'scrapy.downloadermiddlewares.useragent.UserAgentMiddleware': None,
-
-}
-
-RANDOM_UA_TYPE = "random"
+# DOWNLOADER_MIDDLEWARES = {
+#
+# }
 
 # Enable or disable extensions
 # See https://doc.scrapy.org/en/latest/topics/extensions.html
