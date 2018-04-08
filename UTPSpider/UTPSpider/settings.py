@@ -10,7 +10,8 @@ NEWSPIDER_MODULE = 'UTPSpider.spiders'
 COOKIES_ENABLED = False
 COOKIES_ENABLES = False
 
-DOWNLOAD_DELAY = 3.0
+DOWNLOAD_DELAY = 1.0
+DOWNLOAD_TIMEOUT = 1800.0
 
 # Crawl responsibly by identifying yourself (and your website) on the user-agent
 #USER_AGENT = 'UTPSpider (+http://www.yourdomain.com)'
@@ -19,7 +20,7 @@ DOWNLOAD_DELAY = 3.0
 ROBOTSTXT_OBEY = False
 
 SPLASH_URL = 'http://127.0.0.1:8050'
-REDIS_HOST = 'localhost'
+REDIS_HOST = '127.0.0.1'
 REDIS_PORT = 6379
 
 SCHEDULER = "scrapy_redis.scheduler.Scheduler"
